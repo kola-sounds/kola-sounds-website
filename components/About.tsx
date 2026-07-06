@@ -3,26 +3,44 @@ import SectionTitle from "@/components/SectionTitle";
 
 export default function About() {
   return (
-    ssName="fade-up bg-neutral-950 px-6 py-24 text-white"
->  id="about" className="fade-up" id="about" className="bg-neutral-950 px-6 py-24 text-white">
+    <section
+      id="about"
+      className="fade-up bg-neutral-950 px-6 py-24 text-white"
+    >
       <div className="mx-auto max-w-6xl">
-          id="about"Title
+        <SectionTitle
           label="About Us"
-          title="Who We Are"
-          description={siteConfig.ministry.description}
+          title={siteConfig.about.title}
+          description={siteConfig.about.description}
         />
 
-        <div className="mx-auto max-w-4xl space-y-8 text-center text-lg leading-8 text-gray-300">
-          <p>
-            Kola Sounds is a Gospel worship ministry committed to leading
-            people into God's presence through passionate worship, praise,
-            and Christ-centered music.
-          </p>
+        <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div>
+            <p className="text-lg leading-8 text-gray-300">
+              {siteConfig.about.content}
+            </p>
+          </div>
 
-          <p>
-            Our vision is to impact churches, communities and nations by
-            proclaiming the Gospel through music that glorifies Jesus Christ.
-          </p>
+          <div className="rounded-2xl border border-yellow-500/20 bg-neutral-900 p-8 shadow-lg">
+            <h3 className="mb-6 text-2xl font-bold text-yellow-400">
+              Our Mission
+            </h3>
+
+            <p className="leading-8 text-gray-300">
+              {siteConfig.about.mission}
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-4">
+              {siteConfig.about.highlights.map((item) => (
+                <div
+                  key={item}
+                  className="rounded-xl border border-neutral-800 bg-black p-4 text-center transition duration-300 hover:-translate-y-1 hover:border-yellow-500"
+                >
+                  <p className="font-semibold text-yellow-400">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
