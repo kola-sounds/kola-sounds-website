@@ -1,0 +1,85 @@
+export default function About() {
+  return (
+    <section
+      id="about"
+      className="bg-neutral-950 px-6 py-24 text-white"
+    >
+      <div className="mx-auto grid max-w-7xl items-center gap-16 md:grid-cols-2">
+
+        {/* Left Side */}
+        <div>
+          <p className="mb-3 uppercase tracking-[0.4em] text-yellow-400">
+            About Us
+          </p>
+
+          <h2 className="text-4xl font-extrabold leading-tight md:text-5xl">
+            A Worship Ministry
+            <span className="block text-yellow-400">
+              Sounding Beyond Borders
+            </span>
+          </h2>
+
+          <p className="mt-8 text-lg leading-8 text-gray-300">
+            Kola Sounds is a Christ-centered worship ministry passionate
+            about leading people into the presence of God through music.
+            Our songs are born out of worship, prayer, and a desire to see
+            lives transformed by God's love.
+          </p>
+
+          <p className="mt-6 text-lg leading-8 text-gray-300">
+            Through live worship experiences, original music, and ministry,
+            we seek to encourage believers, reach the lost, and inspire
+            a generation to worship God wholeheartedly.
+          </p>
+
+          <div className="mt-10 flex flex-wrap gap-5">
+            <div className="rounded-xl bg-black p-6">
+              <h3 className="text-3xl font-bold text-yellow-400">10+</h3>
+              <p className="text-gray-400">
+                Worship Sessions
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-black p-6">
+              <h3 className="text-3xl font-bold text-yellow-400">1000+</h3>
+              <p className="text-gray-400">
+                Lives Reached
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-black p-6">
+              <h3 className="text-3xl font-bold text-yellow-400">100%</h3>
+              <p className="text-gray-400">
+                For God's Glory
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side */}
+        <div className="rounded-3xl border border-neutral-800 bg-black p-10">
+
+          <h3 className="mb-8 text-2xl font-bold text-yellow-400">
+            Our Mission
+          </h3>
+
+          <ul className="space-y-6 text-gray-300">
+
+            <li>🎵 Lead people into God's presence through worship.</li>
+
+            <li>❤️ Inspire faith, hope, and transformation.</li>
+
+            <li>🌍 Reach nations with Christ-centered music.</li>
+
+            <li>🙏 Build a lifestyle of authentic worship.</li>
+
+            <li>✨ Glorify God in everything we do.</li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </section>
+  );
+}
