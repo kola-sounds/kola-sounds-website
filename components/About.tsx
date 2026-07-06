@@ -3,9 +3,10 @@ import SectionTitle from "@/components/SectionTitle";
 
 export default function About() {
   return (
-    <section className="fade-up" id="about" className="bg-neutral-950 px-6 py-24 text-white">
+    ssName="fade-up bg-neutral-950 px-6 py-24 text-white"
+>  id="about" className="fade-up" id="about" className="bg-neutral-950 px-6 py-24 text-white">
       <div className="mx-auto max-w-6xl">
-        <SectionTitle
+          id="about"Title
           label="About Us"
           title="Who We Are"
           description={siteConfig.ministry.description}
