@@ -46,7 +46,25 @@ export const siteConfig = {
       link: "#contact",
     },
   },
+about: {
+  title: "A Worship Ministry",
 
+  description:
+    "Leading people into God's presence through worship.",
+
+  content:
+    "Kola Sounds is a Christ-centered Gospel worship ministry committed to proclaiming Jesus Christ through spirit-filled worship, praise, and music. We desire to see lives transformed as people encounter God's presence through every song and every ministry opportunity.",
+
+  mission:
+    "To glorify God, spread the Gospel through worship, encourage believers, and impact communities by sounding the message of Christ beyond borders.",
+
+  highlights: [
+    "Christ-Centered Worship",
+    "Spirit-Led Ministry",
+    "Community Outreach",
+    "Sounding Beyond Borders",
+  ],
+},
   latestUpdate: {
     title: "📢 New worship video now available on YouTube!",
 

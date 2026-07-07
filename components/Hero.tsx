@@ -1,54 +1,49 @@
+import Link from "next/link";
 import { siteConfig } from "@/data/siteConfig";
 
 export default function Hero() {
   return (
-<section className="fade-up"
+    <section
       id="home"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden"
+      className="fade-up relative flex min-h-screen items-center justify-center overflow-hidden bg-black text-white"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.75)), url(${siteConfig.theme.heroImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${siteConfig.theme.heroImage})`,
-        }}
-      />
-
-      <div className="absolute inset-0 bg-black/70" />
-
-      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
-
-        <p className="uppercase tracking-[0.5em] text-yellow-400">
-          OFFICIAL WEBSITE
+      <div className="mx-auto max-w-5xl px-6 text-center">
+        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-yellow-400">
+          {siteConfig.ministry.slogan}
         </p>
 
-        <h1 className="mt-6 text-5xl font-black md:text-7xl">
+        <h1 className="text-5xl font-extrabold md:text-7xl">
           {siteConfig.hero.title}
         </h1>
 
-        <h2 className="mt-5 text-2xl text-yellow-400">
+        <p className="mt-6 text-xl text-gray-300">
           {siteConfig.hero.subtitle}
-        </h2>
+        </p>
 
-        <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-300">
+        <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-400">
           {siteConfig.hero.description}
         </p>
 
-        <div className="mt-12 flex flex-wrap justify-center gap-5">
-          <a
+        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+          <Link
             href={siteConfig.hero.primaryButton.link}
-            className="rounded-lg bg-yellow-500 px-8 py-4 font-bold text-black transition hover:bg-yellow-400"
+            className="rounded-full bg-yellow-400 px-8 py-4 font-semibold text-black transition hover:bg-yellow-300"
           >
             {siteConfig.hero.primaryButton.text}
-          </a>
+          </Link>
 
-          <a
+          <Link
             href={siteConfig.hero.secondaryButton.link}
-            className="rounded-lg border border-yellow-500 px-8 py-4 font-bold text-yellow-400 transition hover:bg-yellow-500 hover:text-black"
+            className="rounded-full border border-yellow-400 px-8 py-4 font-semibold text-yellow-400 transition hover:bg-yellow-400 hover:text-black"
           >
             {siteConfig.hero.secondaryButton.text}
-          </a>
+          </Link>
         </div>
-
       </div>
     </section>
   );

@@ -1,0 +1,55 @@
+vgimport { siteConfig } from "@/data/siteConfig";
+
+export default function Hero() {
+  return (
+<section className="fade-up"
+      id="home"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden"
+    >
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${siteConfig.theme.heroImage})`,
+        }}
+      />
+
+      <div className="absolute inset-0 bg-black/70" />
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+
+        <p className="uppercase tracking-[0.5em] text-yellow-400">
+          OFFICIAL WEBSITE
+        </p>
+
+        <h1 className="mt-6 text-5xl font-black md:text-7xl">
+          {siteConfig.hero.title}
+        </h1>
+
+        <h2 className="mt-5 text-2xl text-yellow-400">
+          {siteConfig.hero.subtitle}
+        </h2>
+
+        <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-300">
+          {siteConfig.hero.description}
+        </p>
+
+        <div className="mt-12 flex flex-wrap justify-center gap-5">
+          <a
+            href={siteConfig.hero.primaryButton.link}
+            className="rounded-lg bg-yellow-500 px-8 py-4 font-bold text-black transition hover:bg-yellow-400"
+          >
+            {siteConfig.hero.primaryButton.text}
+          </a>
+
+          <a
+            href={siteConfig.hero.secondaryButton.link}
+            className="rounded-lg border border-yellow-500 px-8 py-4 font-bold text-yellow-400 transition hover:bg-yellow-500 hover:text-black"
+          >
+            {siteConfig.hero.secondaryButton.text}
+          </a>
+        </div>
+
+      </div>
+    </section>
+  );
+}

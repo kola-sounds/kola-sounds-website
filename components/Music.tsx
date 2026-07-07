@@ -3,40 +3,45 @@ import SectionTitle from "@/components/SectionTitle";
 
 export default function Music() {
   return (
-    <section className="fade-up" id="music" className="bg-black px-6 py-24 text-white">
+    <section
+      id="music"
+      className="fade-up bg-black px-6 py-24 text-white"
+    >
       <div className="mx-auto max-w-7xl">
         <SectionTitle
           label="Music"
           title="Latest Worship Videos"
-          description="Watch our latest worship sessions and subscribe to our YouTube channel."
+          description="Be blessed through our worship sessions and subscribe for more."
         />
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          {siteConfig.social.youtubeVideos.map((video) => (
+        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {siteConfig.social.youtubeVideos.map((video, index) => (
             <div
-              key={video}
-              className="overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900"
+              key={index}
+              className="overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 shadow-lg"
             >
-              <iframe
-                src={video}
-                title="Kola Sounds Worship"
-                className="aspect-video w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-
-              <div className="p-4 text-center">
-                <a
-                  href={siteConfig.social.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-yellow-400 hover:text-yellow-300"
-                >
-                  Visit our YouTube Channel
-                </a>
+              <div className="aspect-video">
+                <iframe
+                  src={video}
+                  title={`Kola Sounds Video ${index + 1}`}
+                  className="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <a
+            href={siteConfig.social.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block rounded-full bg-yellow-400 px-8 py-4 font-semibold text-black transition hover:bg-yellow-300"
+          >
+            Visit Our YouTube Channel
+          </a>
         </div>
       </div>
     </section>

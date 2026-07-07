@@ -36,7 +36,9 @@ export default function About() {
                   key={item}
                   className="rounded-xl border border-neutral-800 bg-black p-4 text-center transition duration-300 hover:-translate-y-1 hover:border-yellow-500"
                 >
-                  <p className="font-semibold text-yellow-400">{item}</p>
+                  <p className="font-semibold text-yellow-400">
+                    {item}
+                  </p>
                 </div>
               ))}
             </div>
