@@ -1,50 +1,71 @@
+"use client";
+
 import Link from "next/link";
-import { siteConfig } from "@/data/siteConfig";
+import { useEffect, useState } from "react";
+import FadeUp from "@/components/animations/FadeUp";
+import { getSettings, SiteSettings } from "@/lib/settings";
 
 export default function Hero() {
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    async function load() {
+      const data = await getSettings();
+      setSettings(data);
+    }
+
+    load();
+  }, []);
+
   return (
-    <section
-      id="home"
-      className="fade-up relative flex min-h-screen items-center justify-center overflow-hidden bg-black text-white"
-      style={{
-        backgroundImage: `linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.75)), url(${siteConfig.theme.heroImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="mx-auto max-w-5xl px-6 text-center">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-yellow-400">
-          {siteConfig.ministry.slogan}
-        </p>
+    <FadeUp>
+      <section
+        id="home"
+        className="relative flex min-h-screen items-center justify-center overflow-hidden text-white"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.75)), url(${
+            settings?.hero_image_url || "/hero.jpg"
+          })`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40" />
 
-        <h1 className="text-5xl font-extrabold md:text-7xl">
-          {siteConfig.hero.title}
-        </h1>
+        <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
 
-        <p className="mt-6 text-xl text-gray-300">
-          {siteConfig.hero.subtitle}
-        </p>
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-yellow-400">
+            {settings?.tagline}
+          </p>
 
-        <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-400">
-          {siteConfig.hero.description}
-        </p>
+          <h1 className="text-5xl font-extrabold md:text-7xl">
+            {settings?.ministry_name}
+          </h1>
 
-        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-          <Link
-            href={siteConfig.hero.primaryButton.link}
-            className="rounded-full bg-yellow-400 px-8 py-4 font-semibold text-black transition hover:bg-yellow-300"
-          >
-            {siteConfig.hero.primaryButton.text}
-          </Link>
+          <p className="mt-8 text-xl text-gray-300">
+            Worship • Music • Ministry
+          </p>
 
-          <Link
-            href={siteConfig.hero.secondaryButton.link}
-            className="rounded-full border border-yellow-400 px-8 py-4 font-semibold text-yellow-400 transition hover:bg-yellow-400 hover:text-black"
-          >
-            {siteConfig.hero.secondaryButton.text}
-          </Link>
+          <div className="mt-10 flex justify-center gap-5">
+
+            <Link
+              href="#music"
+              className="rounded-full bg-yellow-400 px-8 py-4 font-bold text-black"
+            >
+              Listen Now
+            </Link>
+
+            <Link
+              href="#contact"
+              className="rounded-full border border-yellow-400 px-8 py-4 font-bold text-yellow-400"
+            >
+              Contact Us
+            </Link>
+
+          </div>
+
         </div>
-      </div>
-    </section>
+      </section>
+    </FadeUp>
   );
 }

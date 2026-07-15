@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { siteConfig } from "@/data/siteConfig";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { getSettings, SiteSettings } from "@/lib/settings";
 
-const links = [
+const navigation = [
   { name: "Home", href: "#home" },
   { name: "About", href: "#about" },
   { name: "Music", href: "#music" },
@@ -14,89 +14,96 @@ const links = [
 ];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    loadSettings();
+
+    const onScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  async function loadSettings() {
+    const data = await getSettings();
+    setSettings(data);
+  }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-neutral-800 bg-black/80 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <header
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        scrolled
+          ? "bg-black/95 backdrop-blur-md shadow-lg"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
-        <a href="#home" className="flex items-center gap-3">
-
-          <Image
-            src={siteConfig.theme.logo}
-            alt={siteConfig.ministry.name}
-            width={55}
-            height={55}
-            priority
-            className="rounded-full"
-          />
-
-          <div>
-
-            <h1 className="text-xl font-bold text-yellow-400">
-              {siteConfig.ministry.name}
-            </h1>
-
-            <p className="text-xs uppercase tracking-[0.3em] text-gray-400">
-              {siteConfig.ministry.slogan}
-            </p>
-
-          </div>
-
-        </a>
-
-        <ul className="hidden gap-8 md:flex">
-
-          {links.map((link) => (
-            <li key={link.name}>
-              <a
-                href={link.href}
-                className="transition hover:text-yellow-400"
-              >
-                {link.name}
-              </a>
-            </li>
-          ))}
-
-        </ul>
-
-        <a
-          href="#contact"
-          className="hidden rounded-lg bg-yellow-500 px-5 py-3 font-semibold text-black transition hover:bg-yellow-400 md:block"
+        <Link
+          href="/"
+          className="flex items-center gap-3"
         >
-          Book Ministry
-        </a>
+          {settings?.hero_image && (
+            <img
+              src={settings.hero_image}
+              alt={settings.ministry_name}
+              className="h-10 w-10 rounded-full object-cover"
+            />
+          )}
+
+          <span className="text-2xl font-extrabold tracking-wide text-yellow-400">
+            {settings?.ministry_name ?? "Kola Sounds"}
+          </span>
+        </Link>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          {navigation.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="text-sm font-medium text-white transition hover:text-yellow-400"
+            >
+              {item.name}
+            </a>
+          ))}
+        </nav>
 
         <button
-          onClick={() => setOpen(!open)}
           className="text-3xl text-yellow-400 md:hidden"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle Menu"
         >
           ☰
         </button>
 
-      </nav>
+      </div>
 
-      {open && (
+      {menuOpen && (
         <div className="border-t border-neutral-800 bg-black md:hidden">
 
-          <div className="flex flex-col px-6 py-5">
+          <nav className="flex flex-col py-4">
 
-            {links.map((link) => (
+            {navigation.map((item) => (
               <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="py-3 hover:text-yellow-400"
+                key={item.name}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-3 text-white transition hover:bg-neutral-900 hover:text-yellow-400"
               >
-                {link.name}
+                {item.name}
               </a>
             ))}
 
-          </div>
+          </nav>
 
         </div>
       )}
-
     </header>
   );
 }
