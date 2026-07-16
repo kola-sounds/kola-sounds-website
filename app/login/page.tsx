@@ -1,40 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] =useState(false);
 
   async function signIn() {
     try {
       setLoading(true);
 
-      console.log("Email:", email);
-
-      const result = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      console.log("Supabase result:", result);
+      console.log("LOGIN RESULT:", data);
+      console.log("LOGIN ERROR:", error);
 
-      if (result.error) {
-        alert(result.error.message);
+      if (error) {
+        alert(error.message);
         return;
       }
 
-      alert("Login successful!");
+      alert("Login successful");
 
-      router.push("/admin/dashboard");
-    } catch (error) {
-      console.error(error);
-      alert(`Unexpected error: ${String(error)}`);
+      console.log("Going to dashboard...");
+
+      window.location.href = "/admin/dashboard";
+    } catch (err) {
+      console.error(err);
+      alert(String(err));
     } finally {
       setLoading(false);
     }
