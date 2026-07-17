@@ -1,49 +1,40 @@
-import LoadingScreen from "@/components/LoadingScreen";
-import ScrollProgress from "@/components/ScrollProgress";
-
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Updates from "@/components/Updates";
 import About from "@/components/About";
 import Music from "@/components/Music";
-import Events from "@/components/Events";
 import Gallery from "@/components/Gallery";
-import Social from "@/components/Social";
+import Events from "@/components/Events";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import WhatsApp from "@/components/WhatsApp";
-import BackToTop from "@/components/BackToTop";
 
 export default function Home() {
   return (
-    <LoadingScreen>
-      <ScrollProgress />
+    <main className="bg-black text-white">
 
-      <main className="overflow-x-hidden bg-black text-white">
-        <Navbar />
+      {/* Hero Section */}
+      <Hero />
 
-        <Hero />
+      {/* Latest Ministry Update */}
+      <Updates />
 
-        <Updates />
+      {/* About Ministry */}
+      <About />
 
-        <About />
+      {/* Music */}
+      <Music />
 
-        <Music />
+      {/* Gallery */}
+      <Gallery />
 
-        <Events />
+      {/* Events */}
+      <Events />
 
-        <Gallery />
+      {/* Contact */}
+      <Contact />
 
-        <Social />
+      {/* Footer */}
+      <Footer />
 
-        <Contact />
-
-        <Footer />
-
-        <WhatsApp />
-
-        <BackToTop />
-      </main>
-    </LoadingScreen>
+    </main>
   );
 }

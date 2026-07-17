@@ -28,21 +28,20 @@ export default function SettingsPage() {
   async function handleSave() {
     if (!settings) return;
 
-    try {
-      setSaving(true);
+    setSaving(true);
 
-      await saveSettings(settings);
+    const success = await saveSettings(settings);
 
+    setSaving(false);
+
+    if (success) {
       alert("Settings saved successfully.");
-    } catch (error) {
-      console.error(error);
+    } else {
       alert("Failed to save settings.");
-    } finally {
-      setSaving(false);
     }
   }
 
-  if (loading) {
+  if (loading || !settings) {
     return (
       <div className="p-8 text-center">
         Loading settings...
@@ -50,22 +49,16 @@ export default function SettingsPage() {
     );
   }
 
-  if (!settings) {
-    return (
-      <div className="p-8 text-center">
-        No settings found.
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8">
+
       <PageHeader
         title="Website Settings"
-        description="Manage your ministry information."
+        description="Manage all website information."
       />
 
-      <FormCard title="General Settings">
+      <FormCard title="General">
+
         <div className="grid gap-5">
 
           <input
@@ -92,26 +85,68 @@ export default function SettingsPage() {
             }
           />
 
-          <h2 className="text-xl font-bold text-yellow-400">
-            Hero Image
-          </h2>
-
-          <SettingsUploader
-            onUpload={(url) =>
+          <textarea
+            rows={3}
+            className="rounded-lg bg-neutral-800 p-3"
+            placeholder="Tagline"
+            value={settings.tagline}
+            onChange={(e) =>
               setSettings({
                 ...settings,
-                hero_image: url,
+                tagline: e.target.value,
               })
             }
           />
 
-          {settings.hero_image && (
-            <img
-              src={settings.hero_image}
-              alt="Hero"
-              className="rounded-lg"
-            />
-          )}
+        </div>
+
+      </FormCard>
+
+      <FormCard title="Logo">
+
+        <SettingsUploader
+          onUpload={(url) =>
+            setSettings({
+              ...settings,
+              logo_url: url,
+            })
+          }
+        />
+
+        {settings.logo_url && (
+          <img
+            src={settings.logo_url}
+            alt="Logo"
+            className="mt-5 h-28 rounded-lg bg-white p-4"
+          />
+        )}
+
+      </FormCard>
+
+      <FormCard title="Hero Image">
+
+        <SettingsUploader
+          onUpload={(url) =>
+            setSettings({
+              ...settings,
+              hero_image: url,
+            })
+          }
+        />
+
+        {settings.hero_image && (
+          <img
+            src={settings.hero_image}
+            alt="Hero"
+            className="mt-5 rounded-xl"
+          />
+        )}
+
+      </FormCard>
+
+      <FormCard title="Contact Information">
+
+        <div className="grid gap-5">
 
           <input
             className="rounded-lg bg-neutral-800 p-3"
@@ -162,6 +197,14 @@ export default function SettingsPage() {
             }
           />
 
+        </div>
+
+      </FormCard>
+
+      <FormCard title="Social Media">
+
+        <div className="grid gap-5">
+
           <input
             className="rounded-lg bg-neutral-800 p-3"
             placeholder="Facebook URL"
@@ -210,16 +253,35 @@ export default function SettingsPage() {
             }
           />
 
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="rounded-lg bg-yellow-400 py-3 font-bold text-black"
-          >
-            {saving ? "Saving..." : "Save Settings"}
-          </button>
-
         </div>
+
       </FormCard>
+
+      <FormCard title="Footer">
+
+        <textarea
+          rows={4}
+          className="w-full rounded-lg bg-neutral-800 p-3"
+          placeholder="Footer text..."
+          value={settings.footer_text}
+          onChange={(e) =>
+            setSettings({
+              ...settings,
+              footer_text: e.target.value,
+            })
+          }
+        />
+
+      </FormCard>
+
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="rounded-xl bg-yellow-400 px-8 py-4 font-bold text-black hover:bg-yellow-300 disabled:opacity-60"
+      >
+        {saving ? "Saving..." : "Save Website Settings"}
+      </button>
+
     </div>
   );
 }

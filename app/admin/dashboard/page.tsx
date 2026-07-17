@@ -15,37 +15,39 @@ export default function Dashboard() {
   const [musicCount, setMusicCount] = useState(0);
   const [eventsCount, setEventsCount] = useState(0);
   const [updatesCount, setUpdatesCount] = useState(0);
+  const [messagesCount, setMessagesCount] = useState(0);
 
   useEffect(() => {
     loadStats();
   }, []);
 
   async function loadStats() {
-    const { count: gallery } = await supabase
-      .from("gallery")
-      .select("*", { count: "exact", head: true });
+    const [
+      gallery,
+      music,
+      events,
+      updates,
+      messages,
+    ] = await Promise.all([
+      supabase.from("gallery").select("*", { count: "exact", head: true }),
+      supabase.from("music").select("*", { count: "exact", head: true }),
+      supabase.from("events").select("*", { count: "exact", head: true }),
+      supabase.from("updates").select("*", { count: "exact", head: true }),
+      supabase
+        .from("messages")
+        .select("*", { count: "exact", head: true })
+        .eq("is_read", false),
+    ]);
 
-    const { count: music } = await supabase
-      .from("music")
-      .select("*", { count: "exact", head: true });
-
-    const { count: events } = await supabase
-      .from("events")
-      .select("*", { count: "exact", head: true });
-
-    const { count: updates } = await supabase
-      .from("updates")
-      .select("*", { count: "exact", head: true });
-
-    setGalleryCount(gallery ?? 0);
-    setMusicCount(music ?? 0);
-    setEventsCount(events ?? 0);
-    setUpdatesCount(updates ?? 0);
+    setGalleryCount(gallery.count ?? 0);
+    setMusicCount(music.count ?? 0);
+    setEventsCount(events.count ?? 0);
+    setUpdatesCount(updates.count ?? 0);
+    setMessagesCount(messages.count ?? 0);
   }
 
   return (
     <div className="space-y-8">
-
       <div>
         <h1 className="text-4xl font-bold text-yellow-400">
           Dashboard
@@ -56,8 +58,7 @@ export default function Dashboard() {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-
+      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
         <AnalyticsCard
           title="Gallery"
           value={galleryCount}
@@ -82,6 +83,11 @@ export default function Dashboard() {
           icon="📢"
         />
 
+        <AnalyticsCard
+          title="New Messages"
+          value={messagesCount}
+          icon="📨"
+        />
       </div>
 
       <DashboardChart
@@ -97,7 +103,6 @@ export default function Dashboard() {
         </h2>
 
         <div className="flex flex-wrap gap-4">
-
           <Link
             href="/admin/gallery"
             className="rounded-lg bg-yellow-400 px-5 py-3 font-semibold text-black hover:bg-yellow-300"
@@ -126,19 +131,26 @@ export default function Dashboard() {
             Publish Update
           </Link>
 
+          <Link
+            href="/admin/contact"
+            className="rounded-lg bg-green-600 px-5 py-3 font-semibold text-white hover:bg-green-500"
+          >
+            View Messages
+            {messagesCount > 0 && (
+              <span className="ml-2 rounded-full bg-red-600 px-2 py-1 text-xs">
+                {messagesCount}
+              </span>
+            )}
+          </Link>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-
         <RecentActivity />
-
         <SystemStatus />
-
       </div>
 
       <StorageCard />
-
     </div>
   );
 }

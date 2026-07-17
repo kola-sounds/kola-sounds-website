@@ -5,9 +5,18 @@ import SectionTitle from "@/components/SectionTitle";
 import FadeUp from "@/components/animations/FadeUp";
 import ScaleIn from "@/components/animations/ScaleIn";
 import { getSettings, SiteSettings } from "@/lib/settings";
+import { sendMessage } from "@/lib/messages";
 
 export default function Contact() {
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [settings, setSettings] =useState<SiteSettings | null>(null);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -16,6 +25,40 @@ export default function Contact() {
   async function loadSettings() {
     const data = await getSettings();
     setSettings(data);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!name.trim() || !message.trim()) {
+      alert("Please enter your name and message.");
+      return;
+    }
+
+    try {
+      setSending(true);
+
+      await sendMessage({
+        name,
+        email,
+        phone,
+        subject,
+        message,
+      });
+
+      alert("Message sent successfully!");
+
+      setName("");
+      setEmail("");
+      setPhone("");
+      setSubject("");
+      setMessage("");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to send message.");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (!settings) {
@@ -44,7 +87,7 @@ export default function Contact() {
           <SectionTitle
             label="Contact"
             title="Invite Kola Sounds"
-            description="We would be honoured to minister at your church, conference, worship night or special event."
+            description="We would be honoured to minister at your church, conference, worship night, crusade, wedding or special event."
           />
 
           <div className="mt-12 grid gap-8 md:grid-cols-2">
@@ -110,9 +153,10 @@ export default function Contact() {
                 </h3>
 
                 <p className="leading-8 text-gray-300">
-                  We are available for church services, conferences,
-                  worship nights, crusades, youth meetings,
-                  weddings and other Gospel events.
+                  We are available for church services,
+                  conferences, worship nights,
+                  crusades, youth meetings,
+                  weddings and Gospel events.
                 </p>
 
                 <a
@@ -127,6 +171,65 @@ export default function Contact() {
               </div>
 
             </ScaleIn>
+
+          </div>
+
+          <div className="mt-16 rounded-2xl border border-neutral-800 bg-neutral-900 p-8">
+
+            <h3 className="mb-6 text-2xl font-bold text-yellow-400">
+              Send Us a Message
+            </h3>
+
+            <form
+              onSubmit={handleSubmit}
+              className="grid gap-4"
+            >
+
+              <input
+                className="rounded-lg bg-black p-3"
+                placeholder="Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+
+              <input
+                className="rounded-lg bg-black p-3"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <input
+                className="rounded-lg bg-black p-3"
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+
+              <input
+                className="rounded-lg bg-black p-3"
+                placeholder="Subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+
+              <textarea
+                rows={6}
+                className="rounded-lg bg-black p-3"
+                placeholder="Your Message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+
+              <button
+                type="submit"
+                disabled={sending}
+                className="rounded-lg bg-yellow-400 py-3 font-bold text-black transition hover:bg-yellow-300 disabled:opacity-50"
+              >
+                {sending ? "Sending..." : "Send Message"}
+              </button>
+
+            </form>
 
           </div>
 

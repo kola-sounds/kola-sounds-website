@@ -1,84 +1,210 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import {
+  markMessageAsRead,
+  deleteMessage,
+} from "@/lib/messages";
+
+interface Message {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+}
 
 export default function ContactPage() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadMessages();
+
+    const channel = supabase
+      .channel("messages-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "messages",
+        },
+        () => {
+          loadMessages();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  async function loadMessages() {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("messages")
+      .select("*")
+      .order("created_at", {
+        ascending: false,
+      });
+
+    if (!error) {
+      setMessages(data ?? []);
+    }
+
+    setLoading(false);
+  }
+
   return (
-    <div>
-      <div className="mb-10">
+    <div className="space-y-8">
+
+      <div>
         <h1 className="text-4xl font-bold text-yellow-400">
-          Contact Information
+          Contact Messages
         </h1>
 
         <p className="mt-2 text-gray-400">
-          Update the ministry contact details shown on the website.
+          Messages sent from the Kola Sounds website.
         </p>
       </div>
 
-      <form className="space-y-6 rounded-2xl border border-neutral-800 bg-neutral-900 p-8">
+      {loading ? (
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Phone Number
-          </label>
-
-          <input
-            type="text"
-            defaultValue="0700207801"
-            className="w-full rounded-lg border border-neutral-700 bg-black p-4 text-white outline-none focus:border-yellow-400"
-          />
+        <div className="rounded-xl bg-neutral-900 p-10 text-center">
+          Loading messages...
         </div>
 
-        <div>
-          <label className="mb-2 block font-medium">
-            WhatsApp
-          </label>
+      ) : messages.length === 0 ? (
 
-          <input
-            type="text"
-            defaultValue="254700207801"
-            className="w-full rounded-lg border border-neutral-700 bg-black p-4 text-white outline-none focus:border-yellow-400"
-          />
+        <div className="rounded-xl bg-neutral-900 p-10 text-center text-gray-400">
+          No messages found.
         </div>
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Email
-          </label>
+      ) : (
 
-          <input
-            type="email"
-            defaultValue="kolasoundsofgrace@gmail.com"
-            className="w-full rounded-lg border border-neutral-700 bg-black p-4 text-white outline-none focus:border-yellow-400"
-          />
+        <div className="space-y-6">
+
+          {messages.map((msg) => (
+
+            <div
+              key={msg.id}
+              className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6 shadow-lg"
+            >
+
+              <div className="flex flex-wrap items-center justify-between gap-4">
+
+                <div>
+
+                  <h2 className="text-2xl font-bold text-yellow-400">
+                    {msg.name}
+                  </h2>
+
+                  <p className="text-gray-400">
+                    {msg.email}
+                  </p>
+
+                  {msg.phone && (
+                    <p className="text-gray-500">
+                      {msg.phone}
+                    </p>
+                  )}
+
+                </div>
+
+                {!msg.is_read && (
+                  <span className="rounded-full bg-red-600 px-4 py-2 text-sm font-bold">
+                    NEW
+                  </span>
+                )}
+
+              </div>
+
+              <div className="mt-6">
+
+                <h3 className="font-bold text-yellow-400">
+                  Subject
+                </h3>
+
+                <p className="mt-2">
+                  {msg.subject}
+                </p>
+
+              </div>
+
+              <div className="mt-6">
+
+                <h3 className="font-bold text-yellow-400">
+                  Message
+                </h3>
+
+                <p className="mt-2 whitespace-pre-line text-gray-300">
+                  {msg.message}
+                </p>
+
+              </div>
+
+              <div className="mt-6 text-sm text-gray-500">
+                {new Date(msg.created_at).toLocaleString()}
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+
+                {!msg.is_read && (
+
+                  <button
+                    onClick={async () => {
+                      await markMessageAsRead(msg.id);
+                      loadMessages();
+                    }}
+                    className="rounded-lg bg-blue-600 px-5 py-2 font-semibold hover:bg-blue-500"
+                  >
+                    Mark as Read
+                  </button>
+
+                )}
+
+                <a
+                  href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(
+                    msg.subject
+                  )}`}
+                  className="rounded-lg bg-green-600 px-5 py-2 font-semibold hover:bg-green-500"
+                >
+                  Reply
+                </a>
+
+                <button
+                  onClick={async () => {
+                    if (
+                      confirm(
+                        "Delete this message permanently?"
+                      )
+                    ) {
+                      await deleteMessage(msg.id);
+                      loadMessages();
+                    }
+                  }}
+                  className="rounded-lg bg-red-600 px-5 py-2 font-semibold hover:bg-red-500"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </div>
+
+          ))}
+
         </div>
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Location
-          </label>
+      )}
 
-          <input
-            type="text"
-            defaultValue="Tegat, Bomet County, Kenya"
-            className="w-full rounded-lg border border-neutral-700 bg-black p-4 text-white outline-none focus:border-yellow-400"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="rounded-xl bg-yellow-400 px-8 py-3 font-bold text-black transition hover:bg-yellow-300"
-        >
-          Save Changes
-        </button>
-      </form>
-
-      <div className="mt-8">
-        <Link
-          href="/admin/dashboard"
-          className="text-yellow-400 hover:underline"
-        >
-          ← Back to Dashboard
-        </Link>
-      </div>
     </div>
   );
 }
